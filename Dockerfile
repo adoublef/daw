@@ -32,8 +32,13 @@ RUN go build \
 FROM alpine:${ALPINE_VERSION} AS runtime
 WORKDIR /opt
 
-RUN addgroup -g 10001 daw \
-    && adduser -G daw -u 10001 daw -D
+ARG UID=10001
+ARG SQL_DIR=/data/sqlite
+
+RUN addgroup -g ${UID} daw \
+    && adduser -G daw -u 10001 daw -D \
+    && mkdir -p ${SQL_DIR} \
+    && chown -R daw:daw ${SQL_DIR}
 
 COPY --from=build /usr/local/bin/daw ./a
 

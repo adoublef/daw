@@ -2,16 +2,32 @@ version: '3.9'
 
 services:
   daw:
+    depends_on:
+      - migrate
     container_name: daw
     build:
       context: .
       target: runtime
+    command: serve -d file:/data/sqlite/daw.db
     volumes:
       - daw-sqlite:/data/sqlite
     privileged: true
     ports: 
       - 8080:8080
     restart: unless-stopped
+    networks: 
+      - daw-network
+
+  migrate:
+    container_name: daw-migrate
+    build:
+      context: .
+      target: runtime
+    command: migrate -d file:/data/sqlite/daw.db
+    volumes:
+      - daw-sqlite:/data/sqlite
+    privileged: true
+    restart: on-failure
     networks: 
       - daw-network
 
