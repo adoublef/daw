@@ -8,7 +8,7 @@ services:
     build:
       context: .
       target: runtime
-    command: serve -d file:/data/sqlite/daw.db
+    command: serve -d file:/data/sqlite/daw.db --iam file:/data/sqlite/iam.db 
     volumes:
       - daw-sqlite:/data/sqlite
     privileged: true
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       target: runtime
-    command: migrate -d file:/data/sqlite/daw.db
+    command: migrate -d file:/data/sqlite/daw.db --iam file:/data/sqlite/iam.db
     volumes:
       - daw-sqlite:/data/sqlite
     privileged: true

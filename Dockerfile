@@ -25,18 +25,19 @@ RUN go test -v -count=1 ./...
 FROM baseline AS build
 
 RUN go build \
-    -ldflags "-s -w -extldflags '-static'" \
+    -ldflags "-s -w" \
     -buildvcs=false \
     -o /usr/local/bin/ ./...
 
 FROM alpine:${ALPINE_VERSION} AS runtime
 WORKDIR /opt
 
-ARG UID=10001
+ENV GID=10001
+ENV UID=10001
 ARG SQL_DIR=/data/sqlite
 
-RUN addgroup -g ${UID} daw \
-    && adduser -G daw -u 10001 daw -D \
+RUN addgroup -g ${GID} daw \
+    && adduser -G daw -u ${UID} daw -D \
     && mkdir -p ${SQL_DIR} \
     && chown -R daw:daw ${SQL_DIR}
 
