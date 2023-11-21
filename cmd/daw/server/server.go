@@ -7,12 +7,13 @@ import (
 	"net/http"
 	"time"
 
+	hateoas "github.com/adoublef/daw/internal/http"
 	"github.com/adoublef/daw/sql"
-	"github.com/go-chi/chi/v5"
 )
 
 type Server struct {
 	s *http.Server
+	// db conns
 }
 
 // ListenAndServe listens on the TCP network address and then handles requests on incoming connections.
@@ -39,12 +40,8 @@ func (s *Server) Shutdown() error {
 // A New Server defines parameters for running an HTTP server.
 func New(addr string, iamDB, dawDB sql.DB) *Server {
 	var (
-		mux = chi.NewMux()
+		mux = hateoas.NewService()
 	)
-
-	mux.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "daw")
-	})
 
 	s := &http.Server{Addr: addr, Handler: mux}
 	return &Server{s}
