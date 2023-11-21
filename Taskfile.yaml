@@ -27,6 +27,7 @@ tasks:
     deps:
       - stop
       - cache
+      - fmt
     cmd: docker-compose up -d --build --force-recreate
 
   logs:
