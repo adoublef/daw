@@ -10,8 +10,9 @@ ENV CGO_ENABLED=1
 ENV GOOS=linux
 ENV GOARCH=amd64
 
-# required for go-sqlite3
+# required for go-sqlite3 & nodejs
 RUN apk add --no-cache --upgrade --latest gcc musl-dev
+RUN apk add nodejs npm
 
 COPY go.* .
 RUN go mod download
@@ -24,7 +25,8 @@ RUN go test -v -count=1 ./...
 
 FROM baseline AS build
 
-RUN go build \
+RUN go generate ./... \
+    && go build \
     -ldflags "-s -w" \
     -buildvcs=false \
     -o /usr/local/bin/ ./...
